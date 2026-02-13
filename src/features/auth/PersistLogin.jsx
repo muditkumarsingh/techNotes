@@ -24,25 +24,23 @@ const PersistLogin = () => {
 
     //this is done to avoid twice run by strict mode
     useEffect(() => {
-        if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+        if (!persist) return
 
-            const verifyRefreshToken = async () => {
-
-                console.log('verifying refresh token')
-                try {
-                    // const reponse =
-                    await refresh()
-
-                    setTrueSuccess(true)
-                } catch (err) {
-                    console.log(err)
-                }
+        const verifyRefreshToken = async () => {
+            console.log('verifying refresh token')
+            try {
+                await refresh().unwrap()
+                setTrueSuccess(true)
+            } catch (err) {
+                console.error(err)
             }
-            if (!token && persist) verifyRefreshToken()
         }
-        return () => effectRan.current = true
-        //erlinit-disable-next-line
-    }, [])
+
+        if (!token) {
+            verifyRefreshToken()
+        }
+    }, [persist, token, refresh])
+
 
     let content;
     if (!persist) { //no persist 
