@@ -1,0 +1,21 @@
+refactoring 
+
+    1. noteApiSlice.endpoints.getNotes.initiate()
+        react-spinners
+
+    how we fetch data
+
+    from
+            const note = useSelector(state => selectNoteById(state, noteId))
+     
+     
+    to 
+        const {note}=useGetNotesQuery("notesList",{
+        selectFromResult:({data})=>({
+            note:data?.entities[noteId]
+        })
+    })
+
+    using memoized 
+        const memoizedNote = memo(Note)
+        export default memoizedNote // re render only when changes in the data
