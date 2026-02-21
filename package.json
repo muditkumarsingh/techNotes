@@ -1,37 +1,42 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+  "name": "lesson_13-frontend",
+  "version": "0.1.0",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^7.1.0",
-    "@fortawesome/free-solid-svg-icons": "^7.1.0",
-    "@fortawesome/react-fontawesome": "^3.1.1",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@fvilers/disable-react-devtools": "^1.3.0",
-    "@reduxjs/toolkit": "^2.11.2",
-    "cookie-parser": "^1.4.7",
-    "jwt-decode": "^4.0.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-redux": "^9.2.0",
-    "react-router-dom": "^7.12.0",
-    "react-spinners": "^0.17.0"
+    "@reduxjs/toolkit": "^1.8.4",
+    "jwt-decode": "^3.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.2",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.4"
   },
-  "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "vite": "^7.2.4"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,27 +1,30 @@
-import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
-import { apiSlice } from "../../app/api/apiSlice";
+import {
+    createSelector,
+    createEntityAdapter
+} from "@reduxjs/toolkit";
+import { apiSlice } from "../../app/api/apiSlice"
 
-const noteAdaptor = createEntityAdapter({
-    sortComparer: (a, b) => a.completed === b.completed ? 0 : a.completed ? 1 : -1
+const notesAdapter = createEntityAdapter({
+    sortComparer: (a, b) => (a.completed === b.completed) ? 0 : a.completed ? 1 : -1
 })
 
-const initialState = noteAdaptor.getInitialState()
+const initialState = notesAdapter.getInitialState()
 
-export const noteApiSlice = apiSlice.injectEndpoints({
+export const notesApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getNotes: builder.query({
             query: () => ({
                 url: '/notes',
                 validateStatus: (response, result) => {
                     return response.status === 200 && !result.isError
-                }
+                },
             }),
-            transformResponse: repsonseData => {
-                const loadedNotes = repsonseData.map(note => {
-                    note.id = note._id //in normalised data it looks for "id" property not "_id" property
+            transformResponse: responseData => {
+                const loadedNotes = responseData.map(note => {
+                    note.id = note._id
                     return note
                 });
-                return noteAdaptor.setAll(initialState, loadedNotes)
+                return notesAdapter.setAll(initialState, loadedNotes)
             },
             providesTags: (result, error, arg) => {
                 if (result?.ids) {
@@ -29,67 +32,66 @@ export const noteApiSlice = apiSlice.injectEndpoints({
                         { type: 'Note', id: 'LIST' },
                         ...result.ids.map(id => ({ type: 'Note', id }))
                     ]
-                }
-                else
-                    return [{ type: 'Note', id: 'LIST' }]
+                } else return [{ type: 'Note', id: 'LIST' }]
             }
         }),
         addNewNote: builder.mutation({
-            query: intiialNote => ({
+            query: initialNote => ({
                 url: '/notes',
-                method: "POST",
+                method: 'POST',
                 body: {
-                    ...intiialNote
+                    ...initialNote,
                 }
             }),
             invalidatesTags: [
-                { type: 'Note', id: 'LIST' }
+                { type: 'Note', id: "LIST" }
             ]
         }),
         updateNote: builder.mutation({
-            query: intialNote => ({
+            query: initialNote => ({
                 url: '/notes',
                 method: 'PATCH',
                 body: {
-                    ...intialNote
+                    ...initialNote,
                 }
             }),
             invalidatesTags: (result, error, arg) => [
-                { type: "Note", id: arg.id }
+                { type: 'Note', id: arg.id }
             ]
         }),
         deleteNote: builder.mutation({
             query: ({ id }) => ({
-                url: '/notes',
+                url: `/notes`,
                 method: 'DELETE',
                 body: { id }
             }),
             invalidatesTags: (result, error, arg) => [
-                { type: "Note", id: arg.id }
+                { type: 'Note', id: arg.id }
             ]
-        })
-    })
+        }),
+    }),
 })
 
 export const {
     useGetNotesQuery,
     useAddNewNoteMutation,
     useUpdateNoteMutation,
-    useDeleteNoteMutation
-} = noteApiSlice
+    useDeleteNoteMutation,
+} = notesApiSlice
 
-//returns query result
-export const selectNotesResults = noteApiSlice.endpoints.getNotes.select()
+// returns the query result object
+export const selectNotesResult = notesApiSlice.endpoints.getNotes.select()
 
-//create memoized selector
+// creates memoized selector
 const selectNotesData = createSelector(
-    selectNotesResults,
-    notesResult => notesResult.data //normalised satte object with ids and entities
+    selectNotesResult,
+    notesResult => notesResult.data // normalized state object with ids & entities
 )
 
+//getSelectors creates these selectors and we rename them with aliases using destructuring
 export const {
     selectAll: selectAllNotes,
     selectById: selectNoteById,
     selectIds: selectNoteIds
-    //pass in a selector that returns the notes slive of state
-} = noteAdaptor.getSelectors(state => selectNotesData(state) ?? initialState)
+    // Pass in a selector that returns the notes slice of state
+} = notesAdapter.getSelectors(state => selectNotesData(state) ?? initialState)
