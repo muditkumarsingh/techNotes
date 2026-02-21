@@ -5,7 +5,7 @@ const baseQuery = fetchBaseQuery({
     baseUrl: 'https://tech-notes-dyx9g7bj2-mudit-kumar-singhs-projects.vercel.app',
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
-        const token = getState().auth.token
+        const token = getState().auth._vercel_jwt
         if (token) {
             headers.set("authorization", `Bearer ${token}`)
         }
